@@ -13,7 +13,7 @@ int multi_level_bucket_heap::calc_lgdelta(int max_key,int k){
   int N = 1<<k;
   int i=0;
   while(N<(max_key+1)){
-    N<<k;
+    N<<=k;
     i++;
   }
   return i;
