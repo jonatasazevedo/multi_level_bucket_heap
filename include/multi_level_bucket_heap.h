@@ -4,13 +4,13 @@ typedef std::pair<int,int> pii;
 
 class multi_level_bucket_heap{
   private:
-    int delta,k,size=0,last=0,max_key,lgdelta,inf;
+    int delta,k,size,last,max_key,lgdelta,inf;
     //k -> number of levels
     //last -> last removed in the heap
     //delta -> base in which the keys will be represented
     //lgdelta -> log(delta)
     std::vector<std::vector<bucket>> levels;
-    std::vector<bool> emptylevel;
+    std::vector<int> level_size;
     void init();
     int calc_lgdelta(int max_key,int k);
     int calc_level(int key);

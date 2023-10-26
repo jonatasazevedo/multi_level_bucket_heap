@@ -3,9 +3,11 @@
 typedef std::pair<int,int> pii;
 
 void multi_level_bucket_heap::init(){
-  emptylevel = std::vector<bool>(k+1,true);
-  levels = std::vector<std::vector<bucket>>(k,std::vector<bucket>());
-  for(int i=0;i<k;i++) levels[i] = std::vector<bucket>(delta,bucket(inf));
+  size=0;
+  last=0;
+  level_size = std::vector<int>(k+1,0);
+  levels = std::vector<std::vector<bucket>>(k+1,std::vector<bucket>());
+  for(int i=0;i<=k;i++) levels[i] = std::vector<bucket>(delta,bucket(inf));
   //k levels, each one have delta buckets
 }
 
@@ -48,8 +50,7 @@ void multi_level_bucket_heap::insert(int key,int value){
   int level = calc_level(key);
   int bucket = calc_bucket(key,level);
   levels[level][bucket].b.emplace_back(key,value);
-  
-  emptylevel[level] = false;
+  level_size[level]++;
   levels[level][bucket].size++;
   if(levels[level][bucket].minimo.first>key) levels[level][bucket].minimo = {key,value};
   
@@ -58,19 +59,20 @@ void multi_level_bucket_heap::insert(int key,int value){
 }
 
 void multi_level_bucket_heap::expand(int level, int bucket){
-    while(levels[level][bucket].size>0){
-      pii elemento = levels[level][bucket].b.back();
-      levels[level][bucket].b.pop_back();
-      if(last!=elemento.first) insert(elemento.first,elemento.second);
-      levels[level][bucket].size--;
-    }
+  while(levels[level][bucket].size>0){
+    pii elemento = levels[level][bucket].b.back();
+    levels[level][bucket].b.pop_back();
+    if(last!=elemento.first) insert(elemento.first,elemento.second);
+    levels[level][bucket].size--;
+    level_size[level]--;
+  }
 }
+
 pii multi_level_bucket_heap::extract_min(){
   int levelmin = 1,b=0;
   pii minPair;
-  while(emptylevel[levelmin]) levelmin++;
+  while(level_size[levelmin]==0) levelmin++;
   while(levels[levelmin][b].size==0) b++;
-  
   minPair = levels[levelmin][b].minimo;
   last = minPair.first;
   expand(levelmin,b);
