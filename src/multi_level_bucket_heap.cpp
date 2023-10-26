@@ -4,9 +4,8 @@ typedef std::pair<int,int> pii;
 
 void multi_level_bucket_heap::init(){
   emptylevel = std::vector<bool>(k+1,true);
-  levels = std::vector<std::vector<std::vector<pii>>>(k,
-    std::vector<std::vector<pii>>());
-    for(int i=0;i<k;i++) levels[i] = std::vector<std::vector<pii>>(delta,std::vector<pii>());
+  levels = std::vector<std::vector<bucket>>(k,std::vector<bucket>());
+  for(int i=0;i<k;i++) levels[i] = std::vector<bucket>(delta,bucket(inf));
   //k levels, each one have delta buckets
 }
 
@@ -16,7 +15,6 @@ multi_level_bucket_heap::multi_level_bucket_heap(int k_, int max_key_){
   inf = max_key+1;
   lgdelta = calc_lgdelta(max_key, k);
   delta = 1 << lgdelta;
-  //std::cout<<delta<<" "<<lgdelta<<"\n";
   init();
 }
 
@@ -49,18 +47,34 @@ int multi_level_bucket_heap::calc_bucket(int key,int level){
 void multi_level_bucket_heap::insert(int key,int value){
   int level = calc_level(key);
   int bucket = calc_bucket(key,level);
-  levels[level][bucket].emplace_back(key,value);
+  levels[level][bucket].b.emplace_back(key,value);
+  
+  emptylevel[level] = false;
+  levels[level][bucket].size++;
+  if(levels[level][bucket].minimo.first>key) levels[level][bucket].minimo = {key,value};
+  
   size++;
   //std::cout<<"level: "<<level<<" "<<"bucket: "<<bucket<<"\n";
 }
 
-// pii multi_level_bucket_heap::extract_min(){
-//   int levelmin = 1;
-//   while(emptylevel[levelmin]) levelmin++;
-//   for(int b=0;b<=delta;b++){
-
-//   }
-//   size--;
-//   return {0,0};
-// }
-
+void multi_level_bucket_heap::expand(int level, int bucket){
+    while(levels[level][bucket].size>0){
+      pii elemento = levels[level][bucket].b.back();
+      levels[level][bucket].b.pop_back();
+      if(last!=elemento.first) insert(elemento.first,elemento.second);
+      levels[level][bucket].size--;
+    }
+}
+pii multi_level_bucket_heap::extract_min(){
+  int levelmin = 1,b=0;
+  pii minPair;
+  while(emptylevel[levelmin]) levelmin++;
+  while(levels[levelmin][b].size==0) b++;
+  
+  minPair = levels[levelmin][b].minimo;
+  last = minPair.first;
+  expand(levelmin,b);
+  size--;
+  
+  return minPair;
+}
