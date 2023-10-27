@@ -31,7 +31,7 @@ int multi_level_bucket_heap::calc_lgdelta(int max_key,int k){
 }
 
 int multi_level_bucket_heap::msb(int x){
-  return __builtin_clz(1) - __builtin_clz(x);
+  return (x==0)? 0:__builtin_clz(1) - __builtin_clz(x);
 }
 
 int multi_level_bucket_heap::calc_level(int key){
@@ -53,7 +53,6 @@ void multi_level_bucket_heap::insert(int key,int value){
   level_size[level]++;
   levels[level][bucket].size++;
   if(levels[level][bucket].minimo.first>key) levels[level][bucket].minimo = {key,value};
-  
   size++;
   //std::cout<<"level: "<<level<<" "<<"bucket: "<<bucket<<"\n";
 }
@@ -71,10 +70,12 @@ void multi_level_bucket_heap::expand(int level, int bucket){
 pii multi_level_bucket_heap::extract_min(){
   int levelmin = 1,b=0;
   pii minPair;
+
   while(level_size[levelmin]==0) levelmin++;
   while(levels[levelmin][b].size==0) b++;
   minPair = levels[levelmin][b].minimo;
   last = minPair.first;
+  
   expand(levelmin,b);
   size--;
   
