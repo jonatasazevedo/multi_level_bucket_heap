@@ -11,9 +11,8 @@ void multi_level_bucket_heap::init(){
   //k levels, each one have delta buckets
 }
 
-multi_level_bucket_heap::multi_level_bucket_heap(int k_, int max_key_){
-  k = k_;
-  max_key = max_key_;
+multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key)
+  :k(k), max_key(max_key){
   inf = max_key+1;
   lgdelta = calc_lgdelta(max_key, k);
   delta = 1 << lgdelta;
@@ -21,7 +20,7 @@ multi_level_bucket_heap::multi_level_bucket_heap(int k_, int max_key_){
 }
 
 int multi_level_bucket_heap::calc_lgdelta(int max_key,int k){
-  int N = 1<<k;
+  int N = 1;
   int i=0;
   while(N<(max_key+1)){
     N<<=k;
@@ -35,48 +34,51 @@ int multi_level_bucket_heap::msb(int x){
 }
 
 int multi_level_bucket_heap::calc_level(int key){
-  int mask = key^last; //turn on differents bits 
+  int mask = key^last; //turn on differents bits
   int ind = msb(mask);
   return (ind/lgdelta) + 1; //levels are 1-indexed
 }
 
 int multi_level_bucket_heap::calc_bucket(int key,int level){
   level--; //1-indexed tranformed in 0-indexed
-  int shift = level*lgdelta;
-  return key>>shift;
+  int shift = level*lgdelta, mask = (1<<lgdelta)-1;
+  return (key>>shift) & mask; //get the lgdelta bits of the key
 }
 
 void multi_level_bucket_heap::insert(int key,int value){
   int level = calc_level(key);
   int bucket = calc_bucket(key,level);
-  levels[level][bucket].b.emplace_back(key,value);
-  level_size[level]++;
-  levels[level][bucket].size++;
-  if(levels[level][bucket].minimo.first>key) levels[level][bucket].minimo = {key,value};
-  size++;
+  // levels[level][bucket].b.emplace_back(key,value);
+  // levels[level][bucket].size++;
+  // if(levels[level][bucket].minimo.first>key) levels[level][bucket].minimo = {key,value};
   //std::cout<<"level: "<<level<<" "<<"bucket: "<<bucket<<"\n";
+  levels[level][bucket].insert(key,value);
+  level_size[level]++;
+  size++;
 }
 
-void multi_level_bucket_heap::expand(int level, int bucket){
+void multi_level_bucket_heap::expand(int level, int bucket, int rmValue){
   while(levels[level][bucket].size>0){
     pii elemento = levels[level][bucket].b.back();
     levels[level][bucket].b.pop_back();
-    if(last!=elemento.first) insert(elemento.first,elemento.second);
+    if(rmValue!=elemento.second) insert(elemento.first,elemento.second);
     levels[level][bucket].size--;
     level_size[level]--;
   }
 }
 
 pii multi_level_bucket_heap::extract_min(){
-  int levelmin = 1,b=0;
+  if(size<=0) return {inf,inf}; //empty heap
+
+  int minLevel = 1, bucketIndex=0;
   pii minPair;
 
-  while(level_size[levelmin]==0) levelmin++;
-  while(levels[levelmin][b].size==0) b++;
-  minPair = levels[levelmin][b].minimo;
+  while(level_size[minLevel]==0) minLevel++;
+  while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
+  minPair = levels[minLevel][bucketIndex].mi;
   last = minPair.first;
   
-  expand(levelmin,b);
+  expand(minLevel, bucketIndex, minPair.second);
   size--;
   
   return minPair;
