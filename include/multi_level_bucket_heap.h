@@ -12,14 +12,14 @@ struct ValueMap{
 
 class multi_level_bucket_heap{
   public:
-    int k, max_key, max_value, delta, lgdelta, last, size, inf;
+    int k, max_key, max_value, delta, lgdelta, last, size, t;
     //k -> number of levels
     //max_key -> maximum key that can be inserted
     //delta -> base in which the keys will be represented
     //lgdelta -> log(delta)
     //last -> last removed in the heap
     //size -> number of elements in the heap
-    //inf -> infinity
+    //t -> number of maximum elements in s-heap
 
     std::vector<std::vector<bucket>> levels;
     std::vector<int> level_size;
@@ -34,11 +34,13 @@ class multi_level_bucket_heap{
     int calc_bucket(int key,int level);
     int msb(int x);
     void deleteAt(int level, int bucket, int index);
+    void deleteMin(ValueMap valueMap);
+    void expand(int level,int bucket);
 
   // public:
+    multi_level_bucket_heap(int k,int max_key, int max_value,int t);
     void insert(int key,int value);
     pii extract_min();
-    void decrease_key(int newKey, int value);
-    multi_level_bucket_heap(int k,int max_key, int max_value);
-    void expand(int level,int bucket, int rmValue);
+    //void decrease_key(int newKey, int value);
+    
 };
