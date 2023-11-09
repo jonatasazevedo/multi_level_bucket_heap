@@ -15,6 +15,6 @@ class dheap{
     dheap();
     dheap(int max_size,int d,int max_value);
     void insert(int key,int value);
-    pii extractmin();
-    void decrease_key(int key,int value);
+    pii extract_min();
+    void decrease_key(int newKey,int value);
 };

@@ -14,7 +14,7 @@ int dheap::parent(int index){
   return (index-1)/d;
 }
 
-pii dheap::extractmin(){
+pii dheap::extract_min(){
   if(heap_size==0) return {-1,-1};
   if(heap_size==1){
     heap_size--;
@@ -68,9 +68,9 @@ void dheap::minHeapify(){
   }
 }
 
-void dheap::decrease_key(int key,int value){
+void dheap::decrease_key(int newKey,int value){
   int index = valueMap[value];
-  heap[index] = {key,value};
+  heap[index] = {newKey,value};
   restore_up(index);
 }
 

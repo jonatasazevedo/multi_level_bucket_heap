@@ -5,6 +5,7 @@ typedef std::pair<int,int> pii;
 void multi_level_bucket_heap::init(){
   size=0;
   last=0;
+  levelActive=bucketActive=0;
   level_size = std::vector<int>(k+2,0);
   levels = std::vector<std::vector<bucket>>(k+2,std::vector<bucket>());
   for(int i=1;i<=k+1;i++) levels[i] = std::vector<bucket>(delta,bucket());
@@ -65,8 +66,9 @@ void multi_level_bucket_heap::insert(int key,int value){
   int bucket = calc_bucket(key,level);
   levels[level][bucket].insert(key,value);
 
-  //verify the use of s-heap
-  //trabalhar aqui
+  //verify if there is an active bucket, and whether it will be inserted into this bucket
+  if(sheap.size()!=0 && level==levelActive && bucket==bucketActive)
+    sheap.insert(key,value);
 
   level_size[level]++;
   size++;
@@ -85,25 +87,31 @@ void multi_level_bucket_heap::expand(int level, int bucket){
 }
 
 pii multi_level_bucket_heap::extract_min(){
-  if(size<=0) return {-1,-1}; //empty heap
+  if(size<=0) return {-1,-1}; //empty multi-level-bucket
+  if(sheap.size()>0){ // sheap is not empty
+    pii minPair = sheap.extract_min(); 
+    ValueMap vmaps = valueMaps[minPair.second];
+    deleteAt(vmaps.level,vmaps.bucket,vmaps.index); //delete in bucket structure
+    return minPair;
+  }
 
   int minLevel = 1, bucketIndex=0;
-  pii minPair;
   while(level_size[minLevel]==0) minLevel++;
   while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
-  minPair = levels[minLevel][bucketIndex].getMin();
+  pii minPair = levels[minLevel][bucketIndex].getMin();
   last = minPair.first;
 
   int index = valueMaps[minPair.second].index;
   deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
-  // trabalho da s-heap
   
   return minPair;
 }
 
-// void multi_level_bucket_heap::decrease_key(int newKey, int value){
-//   ValueMap vm = valueMaps[value];
-//   int level = vm.level, bucket = vm.bucket, index = vm.index;
-//   deleteAt(level, bucket, index);
-//   insert(newKey,value);
-// }
+void multi_level_bucket_heap::decrease_key(int newKey, int value){
+  ValueMap vm = valueMaps[value];
+  int level = vm.level, bucket = vm.bucket, index = vm.index;
+  if(level==levelActive && bucket==bucketActive)
+    sheap.decrease_key(newKey,value);
+
+  levels[level][bucket].b[index]={newKey,value};
+}

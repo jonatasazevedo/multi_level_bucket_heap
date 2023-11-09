@@ -11,8 +11,7 @@ void bucket::insert(int key, int value){
 
 pii bucket::getMin(){
   if(b.empty()) return pii(-1,-1);
-  pii ans;
-  ans = b[0];
+  pii ans = b[0];
   for(size_t i=1;i<b.size();i++)
     ans = std::min(ans,b[i]);
   return ans;
