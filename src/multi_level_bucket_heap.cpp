@@ -65,14 +65,7 @@ void multi_level_bucket_heap::insert(int key,int value){
   levels[level][bucket].insert(key,value);
 
   //verify the use of s-heap
-  if(levels[level][bucket].size>t){
-    levels[level][bucket].active = false;
-    expand(level,bucket);
-    if(levels[level][bucket].size<=t){
-      levels[level][bucket].active = true;
-      levels[level][bucket].copy_for_sheap();
-    }
-  }
+  //trabalhar aqui
 
   level_size[level]++;
   size++;
@@ -102,17 +95,7 @@ pii multi_level_bucket_heap::extract_min(){
 
   int index = valueMaps[minPair.second].index;
   deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
-  if(levels[minLevel][bucketIndex].active)
-    levels[minLevel][bucketIndex].pop_sheap(); //delete in s-heap
-
-  if(!levels[minLevel][bucketIndex].active){
-    if(levels[minLevel][bucketIndex].size<=t){
-      levels[minLevel][bucketIndex].active = true;
-      levels[minLevel][bucketIndex].copy_for_sheap();
-    //less than t elements and not active, so active bucket
-    }
-    else expand(minLevel,bucketIndex);
-  }
+  // trabalho da s-heap
   
   return minPair;
 }
