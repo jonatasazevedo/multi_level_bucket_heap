@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "bucket.h"
+#include "dheap.h"
 typedef std::pair<int,int> pii;
 
 struct ValueMap{
@@ -19,12 +20,14 @@ class multi_level_bucket_heap{
     //lgdelta -> log(delta)
     //last -> last removed in the heap
     //size -> number of elements in the heap
-    //t -> number of maximum elements in s-heap
+    //t -> number of maximum elements in the s-heap
 
     std::vector<std::vector<bucket>> levels;
     std::vector<int> level_size;
+    dheap sheap;
     //level_size -> number of elements in level (all buckets)
     //levels -> levels[i] -> vector of buckets in level i
+    //s-heap, size-sensitive heap
     
     std::vector<ValueMap> valueMaps;
 

@@ -1,5 +1,8 @@
+#include<bits/stdc++.h>
 #include "dheap.h"
 typedef std::pair<int,int> pii;
+
+dheap::dheap(){}
 
 dheap::dheap(int max_size,int d,int max_value)
   :max_size(max_size),d(d),max_value(max_value){
@@ -71,3 +74,6 @@ void dheap::decrease_key(int key,int value){
   restore_up(index);
 }
 
+int dheap::size(){
+  return heap_size;
+}

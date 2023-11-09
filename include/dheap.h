@@ -9,9 +9,11 @@ class dheap{
     int parent(int i);
     void minHeapify();
     void restore_up(int index);
+
   public:
-    int size;
-    dheap(int max_size,int k,int max_value);
+    int size();
+    dheap();
+    dheap(int max_size,int d,int max_value);
     void insert(int key,int value);
     pii extractmin();
     void decrease_key(int key,int value);

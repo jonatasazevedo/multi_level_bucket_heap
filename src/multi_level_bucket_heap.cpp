@@ -11,6 +11,7 @@ void multi_level_bucket_heap::init(){
   //k+1 levels, each one have delta buckets
 
   valueMaps = std::vector<ValueMap>(max_value+1);
+  sheap = dheap(t,3,max_value); //3-heap 
 }
 
 multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_value,int t)
