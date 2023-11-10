@@ -77,3 +77,11 @@ void dheap::decrease_key(int newKey,int value){
 int dheap::size(){
   return heap_size;
 }
+
+bool dheap::empty(){
+  return heap_size==0;
+}
+
+void dheap::clear(){
+  heap_size=0;
+}

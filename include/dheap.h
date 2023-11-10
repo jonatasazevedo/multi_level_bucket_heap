@@ -17,4 +17,6 @@ class dheap{
     void insert(int key,int value);
     pii extract_min();
     void decrease_key(int newKey,int value);
+    bool empty();
+    void clear();
 };
