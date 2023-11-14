@@ -12,11 +12,11 @@ void multi_level_bucket_heap::init(){
   //k+1 levels, each one have delta buckets
 
   valueMaps = std::vector<ValueMap>(max_value+1);
-  sheap = dheap(t,3,max_value); //3-heap 
+  sheap = dheap(t,d,max_value); //3-heap 
 }
 
-multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_value,int t)
-  :k(k), max_key(max_key), max_value(max_value),t(t){
+multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_value,int t,int d)
+  :k(k), max_key(max_key), max_value(max_value),t(t),d(d){
   lgdelta = calc_lgdelta(max_key, k);
   delta = 1 << lgdelta;
   init();
@@ -144,4 +144,14 @@ void multi_level_bucket_heap::deactive_bucket(int level,int bucket){
 
 int multi_level_bucket_heap::size(){
   return mlb_size;
+}
+
+bool multi_level_bucket_heap::empty(){
+  return mlb_size==0;
+}
+
+int multi_level_bucket_heap::keyValue(int value){
+  ValueMap vm = valueMaps[value];
+  int level = vm.level, bucket = vm.bucket, index = vm.index;
+  return levels[level][bucket].b[index].first;
 }

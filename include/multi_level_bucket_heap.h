@@ -14,9 +14,10 @@ struct ValueMap{
 class multi_level_bucket_heap{
   private:
     int k, max_key, max_value, delta, lgdelta, last, mlb_size, t,
-    levelActive,bucketActive,last_sheap;
+    levelActive,bucketActive,last_sheap,d;
     //k -> number of levels
     //max_key -> maximum key that can be inserted
+    //max_value -> maximum value that can be inserted
     //delta -> base in which the keys will be represented
     //lgdelta -> log(delta)
     //last -> last removed in the heap
@@ -25,6 +26,7 @@ class multi_level_bucket_heap{
     //levelActive -> index of level active
     //bucketActive -> index of bucket active
     //last_sheap -> last removed in the sheap
+    //d -> type of d-heap
 
     std::vector<std::vector<bucket>> levels;
     std::vector<int> level_size;
@@ -32,7 +34,6 @@ class multi_level_bucket_heap{
     //level_size -> number of elements in level (all buckets)
     //levels -> levels[i] -> vector of buckets in level i
     //s-heap, size-sensitive heap
-    
     std::vector<ValueMap> valueMaps;
 
     void init();
@@ -48,9 +49,10 @@ class multi_level_bucket_heap{
 
   public:
     int size();
-    multi_level_bucket_heap(int k,int max_key, int max_value,int t);
+    bool empty();
+    multi_level_bucket_heap(int k,int max_key, int max_value,int t,int d);
     void insert(int key,int value);
     pii extract_min();
     void decrease_key(int newKey, int value);
-    
+    int keyValue(int value);
 };
