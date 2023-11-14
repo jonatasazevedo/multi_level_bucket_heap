@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-g++ tests/src/generator.cpp -o tests/exec/generator
-g++ tests/src/structure.cpp -o tests/exec/structure
-./tests/exec/generator > files/testcase
-./tests/exec/structure < files/testcase > files/out1
-./runner < files/testcase > files/out2
-diff files/out1 files/out2

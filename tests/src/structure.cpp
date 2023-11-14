@@ -16,9 +16,7 @@ int main(){
   int op,key,value;
   for(int i=0;i<n;i++){
     cin>>op;
-    if(op==0) 
-      cout<<"size: "<<structure.size()<<endl;
-    else if(op==1){ //insert
+    if(op==1){ //insert
       cin>>key>>value;
       cout<<"insert ("<<key<<","<<value<<")"<<endl;
       keyValue[value]=key;
@@ -40,6 +38,8 @@ int main(){
       structure.insert({key,value});
       keyValue[value] = key;
     }
+    cout<<"size: "<<structure.size()<<endl;
   }
+  
 
 }

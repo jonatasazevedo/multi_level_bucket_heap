@@ -10,9 +10,7 @@ int main(){
   int op,key,value;
   for(int i=0;i<n;i++){
     cin>>op;
-    if(op==0) 
-      cout<<"size: "<<mlbh.size()<<endl;
-    else if(op==1){
+    if(op==1){
       cin>>key>>value;
       cout<<"insert ("<<key<<","<<value<<")"<<endl;
       mlbh.insert(key,value);
@@ -30,5 +28,6 @@ int main(){
       mlbh.decrease_key(key,value);
       cout<<"decrease key ("<<oldKey<<","<<value<<") in ("<<key<<","<<value<<")"<<endl;
     }
+    cout<<"size: "<<mlbh.size()<<endl;
   }
 }

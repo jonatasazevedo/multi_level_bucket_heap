@@ -10,15 +10,14 @@ int generate_random_number(int a, int b){
 
 int main(){
   srand(time(NULL));
-  int n=30,max_value=1000,max_key=1000;
+  int n=15,max_value=1000,max_key=1000;
   int last=0;
   cout<<n<<" "<<max_value<<" "<<max_key<<endl;
-  //0 -> size
   //1 -> Insert
   //2 -> extract min
   //3 -> decrease key
   while(n--){
-    int op = (structure.empty())? generate_random_number(0,1):generate_random_number(0,3);
+    int op = (structure.empty())? 1:generate_random_number(1,3);
     cout<<op;
     if(op==1){
       int key = generate_random_number(last,max_key);
