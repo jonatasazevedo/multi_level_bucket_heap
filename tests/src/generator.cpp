@@ -11,7 +11,7 @@ int generate_random_number(int a, int b){
 
 int main(){
   srand(time(NULL));
-  int n=15,max_value=1000,max_key=1000;
+  int n=10000,max_value=100000,max_key=100000;
   int last=0;
   cout<<n<<" "<<max_value<<" "<<max_key<<endl;
   //1 -> Insert
@@ -19,7 +19,7 @@ int main(){
   //3 -> decrease key
   keyValue = vector<int>(max_value+1,-1);
   while(n--){
-    int op = (structure.empty())? 1:generate_random_number(1,2);
+    int op = (structure.empty())? 1:generate_random_number(1,3);
     cout<<op;
     if(op==1){
       int key = generate_random_number(last,max_key);

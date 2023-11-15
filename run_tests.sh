@@ -20,6 +20,7 @@ IN_FILE=files/testcase
 SOL_FILE=files/out1
 OUT_FILE=files/out2
 
+make
 g++ $CPP_GEN -o $BIN_GEN
 g++ $CPP_STR -o $BIN_STR
 
@@ -27,8 +28,8 @@ g++ $CPP_STR -o $BIN_STR
 for (( i=0; i<$1; i++ ))
 do
   $RUN_GEN > $IN_FILE
-  # $RUN_STR < $IN_FILE > $SOL_FILE
-  # $RUN_MLB < $IN_FILE > $OUT_FILE
+  $RUN_STR < $IN_FILE > $SOL_FILE
+  $RUN_MLB < $IN_FILE > $OUT_FILE
   if cmp -s $OUT_FILE $SOL_FILE; then
     echo "Test case passed"
   else

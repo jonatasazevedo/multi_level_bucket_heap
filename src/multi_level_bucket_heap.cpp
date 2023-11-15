@@ -123,11 +123,16 @@ pii multi_level_bucket_heap::extract_min(){
 void multi_level_bucket_heap::decrease_key(int newKey, int value){
   ValueMap vm = valueMaps[value];
   int level = vm.level, bucket = vm.bucket, index = vm.index;
-  if(level==levelActive && bucket==bucketActive)
+  if(level==levelActive && bucket==bucketActive){
     sheap.decrease_key(newKey,value);
-
-  deleteAt(level,bucket,index);
-  insert(newKey,value);
+    levels[level][bucket].b[index]={newKey,value};
+  }
+  else{
+    deleteAt(level,bucket,index);
+    insert(newKey,value);
+  }
+  
+  
 }
 
 void multi_level_bucket_heap::activate_bucket(int level,int bucket){
