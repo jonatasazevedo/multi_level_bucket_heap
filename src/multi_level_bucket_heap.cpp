@@ -79,12 +79,15 @@ void multi_level_bucket_heap::insert(int key,int value){
 }
 
 void multi_level_bucket_heap::expand(int level, int bucket){
-  while(levels[level][bucket].size>0){
-    pii elemento = levels[level][bucket].b.back();
-    levels[level][bucket].b.pop_back();
-    insert(elemento.first,elemento.second);
-    levels[level][bucket].size--;
+  std::vector<pii> bucket_vector = levels[level][bucket].b;
+  levels[level][bucket].b.clear();
+  levels[level][bucket].size=0;
+
+  for(size_t i=0;i<bucket_vector.size();i++){
+    pii elemento = bucket_vector[i];
     level_size[level]--;
+    mlb_size--;
+    insert(elemento.first,elemento.second);
   }
 }
 
@@ -95,6 +98,7 @@ pii multi_level_bucket_heap::extract_min(){
     ValueMap vm = valueMaps[minPair.second];
     int level = vm.level, bucket = vm.bucket, index = vm.index;
     deleteAt(level,bucket,index); //delete in bucket structure
+    if(sheap.empty()) deactive_bucket(level,bucket);
     return minPair;
   }
 
@@ -102,14 +106,16 @@ pii multi_level_bucket_heap::extract_min(){
   while(level_size[minLevel]==0) minLevel++;
   while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
   pii minPair = levels[minLevel][bucketIndex].getMin();
-  last = minPair.first;
+  last_temp = minPair.first;
 
   int index = valueMaps[minPair.second].index;
   deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
-  if(levels[minLevel][bucketIndex].size<=t)
+  if(levels[minLevel][bucketIndex].size<=t && levels[minLevel][bucketIndex].size>0)
     activate_bucket(minLevel,bucketIndex);
-  else
+  else{
+    last = last_temp;
     expand(minLevel,bucketIndex);
+  }
   
   return minPair;
 }
@@ -138,7 +144,7 @@ void multi_level_bucket_heap::deactive_bucket(int level,int bucket){
   levelActive=-1;
   bucketActive=-1;
   sheap.clear();
-  last = last_sheap;
+  last = last_temp;
   expand(level,bucket);
 }
 
