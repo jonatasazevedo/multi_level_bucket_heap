@@ -104,7 +104,7 @@ int multi_level_bucket_heap::extract_min(){
     int level = vm.level, bucket = vm.bucket, index = vm.index;
     deleteAt(level,bucket,index); //delete in bucket structure
     if(sheap.empty()) deactive_bucket(level,bucket);
-    return minPair.first;
+    return minPair.second;
   }
 
   int minLevel = 1, bucketIndex=0;
@@ -122,7 +122,7 @@ int multi_level_bucket_heap::extract_min(){
     expand(minLevel,bucketIndex);
   }
   
-  return minPair.first;
+  return minPair.second;
 }
 
 void multi_level_bucket_heap::decrease_key(int newKey, int value){
