@@ -1,6 +1,8 @@
 #include <bits/stdc++.h>
 #include "bucket.h"
 
+using namespace std;
+
 bucket::bucket()
   :size(0){ }
 

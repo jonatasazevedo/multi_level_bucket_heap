@@ -1,4 +1,6 @@
+#pragma once
 #include <bits/stdc++.h>
+#define int long long
 typedef std::pair<int,int> pii;
 
 class bucket{

@@ -1,0 +1,3 @@
+dataset=/home/jonatas/Documents/multi_level_bucket_heap/datasets/10k-outx1.txt
+query=/home/jonatas/Documents/multi_level_bucket_heap/queries/10k-outx1.txt
+type=check_sum

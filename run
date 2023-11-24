@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+. set_enviroment.bash
+make clean
+make
+./build/bin/${1}

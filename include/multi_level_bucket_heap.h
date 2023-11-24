@@ -1,3 +1,4 @@
+#pragma once
 #include <bits/stdc++.h>
 #include "bucket.h"
 #include "dheap.h"
@@ -28,7 +29,6 @@ class multi_level_bucket_heap{
     //last_temp -> temporary last
     //d -> type of d-heap
 
-    std::vector<std::vector<bucket>> levels;
     std::vector<int> level_size;
     dheap sheap;
     //level_size -> number of elements in level (all buckets)
@@ -48,11 +48,13 @@ class multi_level_bucket_heap{
     void deactive_bucket(int level,int bucket);
 
   public:
+    std::vector<std::vector<bucket>> levels;
     int size();
     bool empty();
     multi_level_bucket_heap(int k,int max_key, int max_value,int t,int d);
+    multi_level_bucket_heap(int max_key,int max_value);
     void insert(int key,int value);
-    pii extract_min();
+    int extract_min();
     void decrease_key(int newKey, int value);
     int keyValue(int value);
 };

@@ -2,19 +2,25 @@
 #include "multi_level_bucket_heap.h"
 typedef std::pair<int,int> pii;
 
+using namespace std;
+
 void multi_level_bucket_heap::init(){
   mlb_size=0;
   last=0;
   levelActive=bucketActive=0;
   level_size = std::vector<int>(k+2,0);
   levels = std::vector<std::vector<bucket>>(k+2,std::vector<bucket>());
-  for(int i=1;i<=k+1;i++) levels[i] = std::vector<bucket>(delta,bucket());
+  for(int i=1;i<=k+1;i++){
+    levels[i] = std::vector<bucket>(delta,bucket());
+  }
   //k+1 levels, each one have delta buckets
-
   valueMaps = std::vector<ValueMap>(max_value+1);
   sheap = dheap(t,d,max_value); 
 }
 
+multi_level_bucket_heap::multi_level_bucket_heap(int max_key,int max_value)
+  :multi_level_bucket_heap(3,max_key,max_value,5,3){
+}
 multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_value,int t,int d)
   :k(k), max_key(max_key), max_value(max_value),t(t),d(d){
   lgdelta = calc_lgdelta(max_key, k);
@@ -68,7 +74,6 @@ void multi_level_bucket_heap::insert(int key,int value){
   level_size[level]++;
   mlb_size++;
   valueMaps[value] = ValueMap(level,bucket,levels[level][bucket].size-1);
-
   //verify if there is an active bucket, and whether it will be inserted into this bucket
   if(level==levelActive && bucket==bucketActive){
     if(levels[level][bucket].size<t)
@@ -91,15 +96,15 @@ void multi_level_bucket_heap::expand(int level, int bucket){
   }
 }
 
-pii multi_level_bucket_heap::extract_min(){
-  if(mlb_size<=0) return {-1,-1}; //empty multi-level-bucket
+int multi_level_bucket_heap::extract_min(){
+  if(mlb_size<=0) return -1; //empty multi-level-bucket
   if(!sheap.empty()){ // sheap is not empty
     pii minPair = sheap.extract_min(); //delete and extract in sheap
     ValueMap vm = valueMaps[minPair.second];
     int level = vm.level, bucket = vm.bucket, index = vm.index;
     deleteAt(level,bucket,index); //delete in bucket structure
     if(sheap.empty()) deactive_bucket(level,bucket);
-    return minPair;
+    return minPair.first;
   }
 
   int minLevel = 1, bucketIndex=0;
@@ -117,7 +122,7 @@ pii multi_level_bucket_heap::extract_min(){
     expand(minLevel,bucketIndex);
   }
   
-  return minPair;
+  return minPair.first;
 }
 
 void multi_level_bucket_heap::decrease_key(int newKey, int value){
