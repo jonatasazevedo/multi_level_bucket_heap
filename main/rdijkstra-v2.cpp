@@ -35,7 +35,7 @@ void rdijkstra(const auto &adj, const auto &tr, auto &dr, auto &pr, int s, int c
     for(int i : porder) {
         for(auto [j, w] : adj[i]) {
             if(!vis[j]) {
-                q.insert(i, ds[i]);
+                q.insert(ds[i],i);
                 break;
             }
         }

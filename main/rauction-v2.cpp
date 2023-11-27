@@ -104,7 +104,7 @@ void rauction(const auto &fs, auto &tr, auto &dr, auto &pr, int s, int c) {
             w[j] = w[i] + price[j];
             add_subtree_to_answer(j);
         }
-        q.insert(i, w[i]);
+        q.insert(w[i],i);
     }
     swap(ds, dr);
     swap(ps, pr);

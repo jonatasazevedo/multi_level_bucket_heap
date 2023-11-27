@@ -60,12 +60,12 @@ void rauction(auto &fs, const auto &bs, auto &tr, auto &dr, auto &pr, int s, int
             create_fs_bids(i);
             w[i] = w[root] + price[i];
             if(fs[i].size()) {
-                q.insert(i, w[i]);
+                q.insert(w[i],i);
             }
         }
 
         if(fs[root].size()) {
-            q.insert(root, w[root]);
+            q.insert(w[root]root,root);
         }
     };
     
@@ -97,7 +97,7 @@ void rauction(auto &fs, const auto &bs, auto &tr, auto &dr, auto &pr, int s, int
             add_subtree_to_answer(j);
         }
         
-        q.insert(i, w[i]);
+        q.insert(w[i],i);
     }
     swap(ds, dr);
     swap(ps, pr);

@@ -19,7 +19,7 @@ void multi_level_bucket_heap::init(){
 }
 
 multi_level_bucket_heap::multi_level_bucket_heap(int max_key,int max_value)
-  :multi_level_bucket_heap(3,max_key,max_value,5,3){
+  :multi_level_bucket_heap(5,max_key,max_value,5,3){
 }
 multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_value,int t,int d)
   :k(k), max_key(max_key), max_value(max_value),t(t),d(d){
