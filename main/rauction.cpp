@@ -65,7 +65,7 @@ void rauction(auto &fs, const auto &bs, auto &tr, auto &dr, auto &pr, int s, int
         }
 
         if(fs[root].size()) {
-            q.insert(w[root]root,root);
+            q.insert(w[root],root);
         }
     };
     
