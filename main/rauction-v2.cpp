@@ -68,12 +68,12 @@ void rauction(const auto &fs, auto &tr, auto &dr, auto &pr, int s, int c) {
             create_fs_bids(i);
             w[i] = w[root] + price[i];
             if(has_child(i)) {
-                q.insert(i, w[i]);
+                q.insert(w[i],i);
             }
         }
 
         if(has_child(root)) {
-            q.insert(root, w[root]);
+            q.insert(w[root],root);
         }
     };
     

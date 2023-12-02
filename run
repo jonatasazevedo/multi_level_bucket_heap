@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
 . set_enviroment.bash
-make clean
-make
-./build/bin/${1}
+./build/bin/dijkstra
+./build/bin/rdijkstra
+./build/bin/rdijkstra-v2
+./build/bin/rauction
+./build/bin/rauction-v2
