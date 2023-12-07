@@ -2,4 +2,6 @@
 build
 datasets
 queries
-out
+out/pcs
+out/out
+out/in

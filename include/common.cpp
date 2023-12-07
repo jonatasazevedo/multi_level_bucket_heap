@@ -12,7 +12,6 @@ using pq_t = multi_level_bucket_heap;
 // using pq_t = fibonacci_heap;
 
 using graph_t = vector<list<pair<int, int>>>;
-// using graph_t = vector<vector<pair<int, int>>>;
 
 const int oo = 1e18;
 
