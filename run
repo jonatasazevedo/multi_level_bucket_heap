@@ -1,8 +1,4 @@
 #!/usr/bin/env bash
 
-. set_enviroment.bash
-./build/bin/dijkstra
-./build/bin/rdijkstra
-./build/bin/rdijkstra-v2
-./build/bin/rauction
-./build/bin/rauction-v2
+
+./build/bin/${1}

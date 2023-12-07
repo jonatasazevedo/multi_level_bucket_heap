@@ -62,7 +62,7 @@ signed main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     #define endl '\n'
-
+    
     cfg_reader reader;
     string dataset_path = reader.get("dataset");
     string query_path = reader.get("query");
