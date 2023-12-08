@@ -25,6 +25,7 @@ DEPS = $(OBJECTS:.o=.d)
 # flags #
 COMPILE_FLAGS = -O3 -std=c++20 -DLOCAL -g
 INCLUDES = -I include/ -I /usr/local/include
+INCLUDES_RH = -I include_copy/
 # Space-separated pkg-config libraries used by this project
 LIBS =
 
@@ -61,7 +62,7 @@ all: $(BINARIES)
 # Creation of the executable
 $(BIN_PATH)/%: $(OBJECTS) $(MAIN_PATH)/%.$(SRC_EXT)
 	@echo "Linking: $@" 
-	$(CXX) $(CXXFLAGS) $(MAIN_PATH)/$(notdir $@).$(SRC_EXT) $(OBJECTS) $(INCLUDES) -o $@ ${LIBS}
+	$(CXX) $(CXXFLAGS) $(MAIN_PATH)/$(notdir $@).$(SRC_EXT) $(OBJECTS) $(INCLUDES) $(INCLUDES_RH) -o $@ ${LIBS}
 
 # Add dependency files, if they exist
 -include $(DEPS)
@@ -71,6 +72,6 @@ $(BIN_PATH)/%: $(OBJECTS) $(MAIN_PATH)/%.$(SRC_EXT)
 # dependency files to provide header dependencies
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
 	@echo "Compiling: $< -> $@"
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(INCLUDES_RH) -MP -MMD -c $< -o $@
 
 .PRECIOUS: $(BUILD_PATH)/%.o

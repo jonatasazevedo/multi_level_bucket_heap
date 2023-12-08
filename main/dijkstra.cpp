@@ -25,7 +25,6 @@ signed main() {
         pq_t q(c,n);
         init_dijkstra(d, p, q, n, r);
         dijkstra(adj, d, p, q);
-        
         pq_t q2(c,n);
         timer otimer;
         init_dijkstra(d, p, q2, n, s);
