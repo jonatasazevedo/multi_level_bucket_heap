@@ -223,16 +223,16 @@ struct radix_heap_custom : priority_queue_inter {
 
 struct priority_queue_custom : priority_queue_inter {
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> s;
-    vector<int> key;
+    vector<int> keys;
     priority_queue_custom(){};
-    priority_queue_custom(int c){};
-    void insert(int u, int val) {
-        s.emplace(val, u);
-        if(u >= key.size()) key.resize(u + 1);
-        key[u] = val;
+    priority_queue_custom(int c,int n){};
+    void insert(int key, int value) {
+        s.emplace(key,value);
+        if(value >= keys.size()) keys.resize(value + 1);
+        keys[value] = key;
     }
-    void decrease_key(int u, int oldval, int val) {
-        insert(u, val);
+    void decrease_key(int key, int oldval, int value) {
+        insert(key, value);
     }
     int extract_min() {
         int u, d;
@@ -240,8 +240,8 @@ struct priority_queue_custom : priority_queue_inter {
             u = s.top().second;
             d = s.top().first;
             s.pop();
-        } while(key[u] < d);
-        key[u] = -1e18;
+        } while(keys[u] < d);
+        keys[u] = -1e18;
 
         return u;
     }

@@ -8,7 +8,7 @@ find "$path" -type f -exec sh -c '
         echo "Arquivo: $(basename $arquivo)"
         > "config"
         echo 
-        printf "dataset=/home/jonatas/Documents/multi_level_bucket_heap/datasets/"$(basename $arquivo)"\nquery=/home/jonatas/Documents/multi_level_bucket_heap/queries/"$(basename $arquivo)"\ntype=check_sum"> "config"
+        printf "dataset=/home/jonatas/Documents/multi_level_bucket_heap/datasets/"$(basename $arquivo)"\nquery=/home/jonatas/Documents/multi_level_bucket_heap/queries/"$(basename $arquivo)"\ntype=main_time"> "config"
             ./build/bin/dijkstra
             ./build/bin/rdijkstra
             ./build/bin/rdijkstra-v2

@@ -1,3 +1,3 @@
-dataset=/home/jonatas/Documents/multi_level_bucket_heap/datasets/150_x_150-6n+25.gridgen
-query=/home/jonatas/Documents/multi_level_bucket_heap/queries/150_x_150-6n+25.gridgen
+dataset=/home/jonatas/Documents/multi_level_bucket_heap/datasets/100k-outx2.txt
+query=/home/jonatas/Documents/multi_level_bucket_heap/queries/100k-outx2.txt
 type=check_sum
