@@ -5,7 +5,7 @@ path="datasets"
 
 find "$path" -type f -exec sh -c '
     for arquivo; do
-        echo "Arquivo: $(basename $arquivo)"
+        echo "$(basename $arquivo)"
         > "config"
         echo 
         printf "dataset=/home/jonatas/Documents/multi_level_bucket_heap/datasets/"$(basename $arquivo)"\nquery=/home/jonatas/Documents/multi_level_bucket_heap/queries/"$(basename $arquivo)"\ntype=main_time"> "config"
