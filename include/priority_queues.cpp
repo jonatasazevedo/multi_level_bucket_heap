@@ -10,6 +10,94 @@ struct priority_queue_inter {
     virtual int size() = 0;
 };
 
+struct set_pq : priority_queue_inter {
+    set<pair<int, int>> s;
+    set_pq(){};
+    set_pq(int c){};
+    void insert(int u, int val) {
+        s.insert({val, u});
+    }
+    void decrease_key(int u, int oldval, int val) {
+        s.erase({oldval, u});
+        s.insert({val, u});
+    }
+    int extract_min() {
+        int u = s.begin()->second;
+        s.erase(s.begin());
+        return u;
+    }
+    int size(){
+        return s.size();
+    }
+};
+
+struct radix_heap_custom : priority_queue_inter {
+    radix_heap::pair_radix_heap<int, int> s;
+    int real_size = 0;
+    vector<int> keys;
+    radix_heap_custom(){};
+    radix_heap_custom(int c,int n){};
+    void insert(int key, int value) {
+        real_size++;
+        s.emplace(key,value);
+        if(value >= keys.size()) keys.resize(value + 1);
+        keys[value] = key;
+    }
+    void decrease_key(int key, int value) {
+        s.emplace(key, value);
+        if(value >= keys.size()) keys.resize(value + 1);
+        keys[value] = key;
+    }
+    int extract_min() {
+        int u = -1, d = -1;
+        do {
+            u = s.top_value();
+            d = s.top_key();
+            s.pop();
+        } while(d > keys[u]);
+        keys[u] = -1e18;
+        real_size--;
+
+        return u;
+    }
+    int size(){
+        return real_size;
+    }
+};
+
+struct priority_queue_custom : priority_queue_inter {
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> s;
+    vector<int> keys;
+    int real_size = 0;
+    priority_queue_custom(){};
+    priority_queue_custom(int c,int n){};
+    void insert(int key, int value) {
+        real_size++;
+        s.emplace(key,value);
+        if(value >= keys.size()) keys.resize(value + 1);
+        keys[value] = key;
+    }
+    void decrease_key(int key, int value) {
+        insert(key, value);
+        real_size--;
+    }
+    int extract_min() {
+        int u, d;
+        do {
+            u = s.top().second;
+            d = s.top().first;
+            s.pop();
+        } while(keys[u] < d);
+        keys[u] = -1e18;
+        real_size--;
+        
+        return u;
+    }
+    int size(){
+        return real_size;
+    }
+};
+
 // struct ml_bucket : priority_queue_inter {
 //     vector<vector<vector<pair<int, int>>>> b;
 //     int32_t level_mask;
@@ -164,88 +252,3 @@ struct priority_queue_inter {
 //         return sz;
 //     }
 // };
-
-// struct set_pq : priority_queue_inter {
-//     set<pair<int, int>> s;
-//     set_pq(){};
-//     set_pq(int c){};
-//     void insert(int u, int val) {
-//         s.insert({val, u});
-//     }
-//     void decrease_key(int u, int oldval, int val) {
-//         s.erase({oldval, u});
-//         s.insert({val, u});
-//     }
-//     int extract_min() {
-//         int u = s.begin()->second;
-//         s.erase(s.begin());
-//         return u;
-//     }
-//     int size(){
-//         return s.size();
-//     }
-// };
-
-
-struct radix_heap_custom : priority_queue_inter {
-    radix_heap::pair_radix_heap<int, int> s;
-    int real_size = 0;
-    vector<int> keys;
-    radix_heap_custom(){};
-    radix_heap_custom(int c,int n){};
-    void insert(int key, int value) {
-        real_size++;
-        s.emplace(key,value);
-        if(value >= keys.size()) keys.resize(value + 1);
-        keys[value] = key;
-    }
-    void decrease_key(int key, int value) {
-        s.emplace(key, value);
-        if(value >= keys.size()) keys.resize(value + 1);
-        keys[value] = key;
-    }
-    int extract_min() {
-        int u = -1, d = -1;
-        do {
-            u = s.top_value();
-            d = s.top_key();
-            s.pop();
-        } while(d > keys[u]);
-        keys[u] = -1e18;
-        real_size--;
-
-        return u;
-    }
-    int size(){
-        return real_size;
-    }
-};
-
-struct priority_queue_custom : priority_queue_inter {
-    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> s;
-    vector<int> keys;
-    priority_queue_custom(){};
-    priority_queue_custom(int c,int n){};
-    void insert(int key, int value) {
-        s.emplace(key,value);
-        if(value >= keys.size()) keys.resize(value + 1);
-        keys[value] = key;
-    }
-    void decrease_key(int key, int oldval, int value) {
-        insert(key, value);
-    }
-    int extract_min() {
-        int u, d;
-        do {
-            u = s.top().second;
-            d = s.top().first;
-            s.pop();
-        } while(keys[u] < d);
-        keys[u] = -1e18;
-
-        return u;
-    }
-    int size(){
-        return s.size();
-    }
-};

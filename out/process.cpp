@@ -10,6 +10,5 @@ int main(){
             if(!isalpha(s.back())) cout<<s<<",";
             else cout<<endl<<s<<",";
         }
-        
     }
 }
