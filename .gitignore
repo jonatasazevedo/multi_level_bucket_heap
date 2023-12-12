@@ -3,5 +3,5 @@ build
 datasets
 queries
 out/pcs
-out/out
+out/out.csv
 out/in

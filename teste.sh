@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+make clean
 make
 . set_enviroment.bash
 path="out"
