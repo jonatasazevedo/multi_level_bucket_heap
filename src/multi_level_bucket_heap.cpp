@@ -7,13 +7,15 @@ using namespace std;
 void multi_level_bucket_heap::init(){
   mlb_size=0;
   last=0;
-  level_size = std::vector<int>(k+1,0);
-  levels = std::vector<std::vector<bucket>>(k+1,std::vector<bucket>());
-  for(int i=1;i<=k;i++){
+  level_size = std::vector<int>(k,0);
+  range_levels = std::vector<int>(k);
+  levels = std::vector<std::vector<bucket>>(k,std::vector<bucket>());
+  for(int i=0;i<k;i++){
     levels[i] = std::vector<bucket>(delta,bucket());
+    range_levels[i] = pow(delta,i);
   }
   //k levels, each one have delta buckets
-  valueMaps = std::vector<ValueMap>(max_value+1);
+  // valueMaps = std::vector<ValueMap>(max_value+1);
 }
 
 multi_level_bucket_heap::multi_level_bucket_heap(int max_key,int max_value)
@@ -56,14 +58,16 @@ multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_val
 // }
 
 void multi_level_bucket_heap::insert(int key,int value){
-  int remain = key-offset*u;
-  for(int indice=activeBucket,i=1;i<=delta;i++,indice){
-    if(indice>=delta) indice-=delta;
-    if(remain>=(i-1)*delta && remain<=i*delta){
-      levels[k][indice].insert(key,value);
+  int remain = key%u;
+  int current_range = range_levels[k-1]; 
+  for(int indice=0;indice<delta;indice++){
+    if(remain>=indice*current_range && remain<(indice+1)*current_range){
+      levels[k-1][indice].insert(key,value);
+      cout<<"indice inserido: "<<indice<<endl;
       return;
     }
   }
+  
 }
 
 // void multi_level_bucket_heap::expand(int level, int bucket){
@@ -149,8 +153,8 @@ bool multi_level_bucket_heap::empty(){
   return mlb_size==0;
 }
 
-int multi_level_bucket_heap::keyValue(int value){
-  ValueMap vm = valueMaps[value];
-  int level = vm.level, bucket = vm.bucket, index = vm.index;
-  return levels[level][bucket].b[index].first;
-}
+// int multi_level_bucket_heap::keyValue(int value){
+//   ValueMap vm = valueMaps[value];
+//   int level = vm.level, bucket = vm.bucket, index = vm.index;
+//   return levels[level][bucket].b[index].first;
+// }

@@ -23,8 +23,10 @@ class multi_level_bucket_heap{
     //u -> "definir"
     //offset -> "definir"
 
-    std::vector<int> level_size;
+    std::vector<int> level_size,range_levels;
+    std::vector<std::vector<bucket>> levels;
     //level_size -> number of elements in level (all buckets)
+    //range_levels -> range of level bucket range
     //levels -> levels[i] -> vector of buckets in level i
     std::vector<ValueMap> valueMaps;
 
@@ -39,7 +41,7 @@ class multi_level_bucket_heap{
     // void deactive_bucket(int level,int bucket);
 
   public:
-    std::vector<std::vector<bucket>> levels;
+    
     int size();
     bool empty();
     multi_level_bucket_heap(int k,int max_key, int max_value);
@@ -47,5 +49,5 @@ class multi_level_bucket_heap{
     void insert(int key,int value);
     // int extract_min();
     // void decrease_key(int newKey, int value);
-    int keyValue(int value);
+    // int keyValue(int value);
 };
