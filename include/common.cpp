@@ -22,6 +22,7 @@ void init_dijkstra(auto &d, auto &p, pq_t &q, const int n, const int s) {
 void dijkstra(const auto &adj, auto &d, auto &p, pq_t &q) {
     while(q.size()) {
         int u = q.extract_min();
+        cout<<u<<endl;
         for(auto [v, w] : adj[u]) {
             if(d[v] > d[u] + w) {
                 int old = d[v];
@@ -108,7 +109,7 @@ auto graph_reader(string path) {
         }
     }
     
-    return make_pair(adj, c * (n - 1));
+    return make_pair(adj, c);
 }
 
 struct timer {

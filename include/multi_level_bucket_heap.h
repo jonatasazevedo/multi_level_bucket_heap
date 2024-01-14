@@ -14,15 +14,18 @@ struct ValueMap{
 
 class multi_level_bucket_heap{
   private:
-    int k, max_key, max_value, delta, lgdelta, last, mlb_size, t,
+    int k, max_key, max_value, delta, lgdelta,top_level_range,bucket_top_active,last, mlb_size, local_size, t,
     levelActive,bucketActive,last_temp,d;
     //k -> number of levels
     //max_key -> maximum key that can be inserted
     //max_value -> maximum value that can be inserted
     //delta -> base in which the keys will be represented
     //lgdelta -> log(delta)
+    //top_level_range -> range of top level buckets
+    //bucket_top_active -> represents bucket active in top level
     //last -> last removed in the heap
     //mlb_size -> number of elements in the heap
+    //local_size -> number of elements in local strucuture
     //t -> number of maximum elements in the s-heap
     //levelActive -> index of level active
     //bucketActive -> index of bucket active
@@ -46,6 +49,9 @@ class multi_level_bucket_heap{
     void expand(int level,int bucket);
     void activate_bucket(int level,int bucket);
     void deactive_bucket(int level,int bucket);
+    void fill_structure_local();
+    void insertLocal(int key,int value);
+    int findBucketTopLevel(int key);
 
   public:
     std::vector<std::vector<bucket>> levels;

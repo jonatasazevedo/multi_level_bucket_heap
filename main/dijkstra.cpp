@@ -23,12 +23,12 @@ signed main() {
         pq_t q(c,n);
         init_dijkstra(d, p, q, n, r);
         dijkstra(adj, d, p, q);
-        pq_t q2(c,n);
-        timer otimer;
-        init_dijkstra(d, p, q2, n, s);
-        dijkstra(adj, d, p, q2);
+        // pq_t q2(c,n);
+        // timer otimer;
+        // init_dijkstra(d, p, q2, n, s);
+        // dijkstra(adj, d, p, q2);
 
-        print_output(reader.get("type"), d, p, otimer);
+        // print_output(reader.get("type"), d, p, otimer);
     }
     return 0;
 }

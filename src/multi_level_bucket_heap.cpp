@@ -6,8 +6,10 @@ using namespace std;
 
 void multi_level_bucket_heap::init(){
   mlb_size=0;
+  local_size=0;
   last=0;
-  levelActive=bucketActive=0;
+  levelActive=bucketActive=-1;
+  bucket_top_active=0;
   level_size = std::vector<int>(k+2,0);
   levels = std::vector<std::vector<bucket>>(k+2,std::vector<bucket>());
   for(int i=1;i<=k+1;i++){
@@ -19,12 +21,13 @@ void multi_level_bucket_heap::init(){
 }
 
 multi_level_bucket_heap::multi_level_bucket_heap(int max_key,int max_value)
-  :multi_level_bucket_heap(5,max_key,max_value,5,3){
+  :multi_level_bucket_heap(3,max_key,max_value,5,3){
 }
 multi_level_bucket_heap::multi_level_bucket_heap(int k, int max_key, int max_value,int t,int d)
   :k(k), max_key(max_key), max_value(max_value),t(t),d(d){
   lgdelta = calc_lgdelta(max_key, k);
-  delta = 1 << lgdelta;
+  delta = 1 << lgdelta; //2^lgdelta = delta
+  top_level_range = 1 << (lgdelta*k); //delta^k
   init();
 }
 
@@ -52,6 +55,7 @@ void multi_level_bucket_heap::deleteAt(int level, int bucket, int index){
   levels[level][bucket].b.pop_back();
   levels[level][bucket].size--;
   level_size[level]--;
+  local_size--;
   mlb_size--;
 }
 
@@ -67,12 +71,17 @@ int multi_level_bucket_heap::calc_bucket(int key,int level){
   return (key>>shift) & mask; //get the lgdelta bits of the key
 }
 
-void multi_level_bucket_heap::insert(int key,int value){
-  int level = calc_level(key);
-  int bucket = calc_bucket(key,level);
+int multi_level_bucket_heap::findBucketTopLevel(int key){
+  return (key/top_level_range)%delta;
+}
+
+void multi_level_bucket_heap::insertLocal(int key,int value){
+  int level = calc_level(key%top_level_range);
+  int bucket = calc_bucket(key%top_level_range,level);
+  cout<<level<<" "<<bucket<<endl;
   levels[level][bucket].insert(key,value);
   level_size[level]++;
-  mlb_size++;
+  local_size++;
   valueMaps[value] = ValueMap(level,bucket,levels[level][bucket].size-1);
   //verify if there is an active bucket, and whether it will be inserted into this bucket
   if(level==levelActive && bucket==bucketActive){
@@ -80,6 +89,16 @@ void multi_level_bucket_heap::insert(int key,int value){
       sheap.insert(key,value);
     else
       deactive_bucket(level,bucket);
+  }
+}
+
+void multi_level_bucket_heap::insert(int key,int value){ 
+  mlb_size++;
+  int bucket_top_level = findBucketTopLevel(key);
+  if(bucket_top_level==bucket_top_active) insertLocal(key,value);
+  else{
+    levels[k+1][bucket_top_level].insert(key,value);
+    valueMaps[value] = ValueMap(k+1,bucket_top_level,levels[k+1][bucket_top_level].size-1);
   }
 }
 
@@ -91,8 +110,8 @@ void multi_level_bucket_heap::expand(int level, int bucket){
   for(size_t i=0;i<bucket_vector.size();i++){
     pii elemento = bucket_vector[i];
     level_size[level]--;
-    mlb_size--;
-    insert(elemento.first,elemento.second);
+    local_size--;
+    insertLocal(elemento.first,elemento.second);
   }
 }
 
@@ -111,7 +130,7 @@ int multi_level_bucket_heap::extract_min(){
   while(level_size[minLevel]==0) minLevel++;
   while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
   pii minPair = levels[minLevel][bucketIndex].getMin();
-  last_temp = minPair.first;
+  last_temp = minPair.first%top_level_range;
 
   int index = valueMaps[minPair.second].index;
   deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
@@ -122,6 +141,8 @@ int multi_level_bucket_heap::extract_min(){
     expand(minLevel,bucketIndex);
   }
   
+  if(local_size==0) fill_structure_local();
+
   return minPair.second;
 }
 
@@ -132,12 +153,11 @@ void multi_level_bucket_heap::decrease_key(int newKey, int value){
     sheap.decrease_key(newKey,value);
     levels[level][bucket].b[index]={newKey,value};
   }
-  else{
+  else if(level<=k){
     deleteAt(level,bucket,index);
     insert(newKey,value);
   }
-  
-  
+  else levels[level][bucket].b[index].first=newKey;
 }
 
 void multi_level_bucket_heap::activate_bucket(int level,int bucket){
@@ -156,6 +176,21 @@ void multi_level_bucket_heap::deactive_bucket(int level,int bucket){
   sheap.clear();
   last = last_temp;
   expand(level,bucket);
+}
+
+void multi_level_bucket_heap::fill_structure_local(){
+  if(mlb_size!=0){
+    bucket_top_active++;
+    if(bucket_top_active==delta) bucket_top_active=0;
+    levelActive=bucketActive=-1;
+    last=0;
+    while(levels[k+1][bucket_top_active].size>0){
+      pii elemento = levels[k+1][bucket_top_active].b.back();
+      levels[k+1][bucket_top_active].b.pop_back();
+      levels[k+1][bucket_top_active].size--;
+      insertLocal(elemento.first,elemento.second);
+    }   
+  }
 }
 
 int multi_level_bucket_heap::size(){
