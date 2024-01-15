@@ -78,7 +78,6 @@ int multi_level_bucket_heap::findBucketTopLevel(int key){
 void multi_level_bucket_heap::insertLocal(int key,int value){
   int level = calc_level(key%top_level_range);
   int bucket = calc_bucket(key%top_level_range,level);
-  cout<<level<<" "<<bucket<<endl;
   levels[level][bucket].insert(key,value);
   level_size[level]++;
   local_size++;
@@ -153,11 +152,10 @@ void multi_level_bucket_heap::decrease_key(int newKey, int value){
     sheap.decrease_key(newKey,value);
     levels[level][bucket].b[index]={newKey,value};
   }
-  else if(level<=k){
+  else{
     deleteAt(level,bucket,index);
     insert(newKey,value);
   }
-  else levels[level][bucket].b[index].first=newKey;
 }
 
 void multi_level_bucket_heap::activate_bucket(int level,int bucket){
