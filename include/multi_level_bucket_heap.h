@@ -31,7 +31,6 @@ class multi_level_bucket_heap{
     //bucketActive -> index of bucket active
     //last_temp -> temporary last
     //d -> type of d-heap
-
     std::vector<int> level_size;
     dheap sheap;
     //level_size -> number of elements in level (all buckets)
@@ -45,7 +44,6 @@ class multi_level_bucket_heap{
     int calc_bucket(int key,int level);
     int msb(int x);
     void deleteAt(int level, int bucket, int index);
-    void deleteMin(ValueMap valueMap);
     void expand(int level,int bucket);
     void activate_bucket(int level,int bucket);
     void deactive_bucket(int level,int bucket);

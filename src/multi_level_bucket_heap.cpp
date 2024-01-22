@@ -12,9 +12,7 @@ void multi_level_bucket_heap::init(){
   bucket_top_active=0;
   level_size = std::vector<int>(k+2,0);
   levels = std::vector<std::vector<bucket>>(k+2,std::vector<bucket>());
-  for(int i=1;i<=k+1;i++){
-    levels[i] = std::vector<bucket>(delta,bucket());
-  }
+  for(int i=1;i<=k+1;i++) levels[i] = std::vector<bucket>(delta,bucket());
   //k+1 levels, each one have delta buckets
   valueMaps = std::vector<ValueMap>(max_value+1);
   sheap = dheap(t,d,max_value); 
@@ -55,7 +53,7 @@ void multi_level_bucket_heap::deleteAt(int level, int bucket, int index){
   levels[level][bucket].b.pop_back();
   levels[level][bucket].size--;
   level_size[level]--;
-  local_size--;
+  if(level<=k && level>=0) local_size--;
   mlb_size--;
 }
 
@@ -76,8 +74,8 @@ int multi_level_bucket_heap::findBucketTopLevel(int key){
 }
 
 void multi_level_bucket_heap::insertLocal(int key,int value){
-  int level = calc_level(key%top_level_range);
-  int bucket = calc_bucket(key%top_level_range,level);
+  int level = calc_level(key);
+  int bucket = calc_bucket(key,level);
   levels[level][bucket].insert(key,value);
   level_size[level]++;
   local_size++;
@@ -94,7 +92,7 @@ void multi_level_bucket_heap::insertLocal(int key,int value){
 void multi_level_bucket_heap::insert(int key,int value){ 
   mlb_size++;
   int bucket_top_level = findBucketTopLevel(key);
-  if(bucket_top_level==bucket_top_active) insertLocal(key,value);
+  if(bucket_top_level==bucket_top_active) insertLocal(key%top_level_range,value);
   else{
     levels[k+1][bucket_top_level].insert(key,value);
     valueMaps[value] = ValueMap(k+1,bucket_top_level,levels[k+1][bucket_top_level].size-1);
@@ -116,6 +114,8 @@ void multi_level_bucket_heap::expand(int level, int bucket){
 
 int multi_level_bucket_heap::extract_min(){
   if(mlb_size<=0) return -1; //empty multi-level-bucket
+  if(local_size==0) fill_structure_local();
+
   if(!sheap.empty()){ // sheap is not empty
     pii minPair = sheap.extract_min(); //delete and extract in sheap
     ValueMap vm = valueMaps[minPair.second];
@@ -124,31 +124,32 @@ int multi_level_bucket_heap::extract_min(){
     if(sheap.empty()) deactive_bucket(level,bucket);
     return minPair.second;
   }
-
   int minLevel = 1, bucketIndex=0;
-  while(level_size[minLevel]==0) minLevel++;
+  while(level_size[minLevel]==0 && minLevel<k) minLevel++;
+
   while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
   pii minPair = levels[minLevel][bucketIndex].getMin();
-  last_temp = minPair.first%top_level_range;
-
+  last_temp = minPair.first;
   int index = valueMaps[minPair.second].index;
   deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
+
   if(levels[minLevel][bucketIndex].size<=t && levels[minLevel][bucketIndex].size>0)
     activate_bucket(minLevel,bucketIndex);
   else{
     last = last_temp;
     expand(minLevel,bucketIndex);
   }
-  
-  if(local_size==0) fill_structure_local();
 
   return minPair.second;
 }
 
 void multi_level_bucket_heap::decrease_key(int newKey, int value){
+  
   ValueMap vm = valueMaps[value];
   int level = vm.level, bucket = vm.bucket, index = vm.index;
+  int elAntigo = levels[level][bucket].b[index].first;
   if(level==levelActive && bucket==bucketActive){
+    newKey%=top_level_range;
     sheap.decrease_key(newKey,value);
     levels[level][bucket].b[index]={newKey,value};
   }
@@ -186,7 +187,7 @@ void multi_level_bucket_heap::fill_structure_local(){
       pii elemento = levels[k+1][bucket_top_active].b.back();
       levels[k+1][bucket_top_active].b.pop_back();
       levels[k+1][bucket_top_active].size--;
-      insertLocal(elemento.first,elemento.second);
+      insertLocal(elemento.first%top_level_range,elemento.second);
     }   
   }
 }
@@ -204,3 +205,16 @@ int multi_level_bucket_heap::keyValue(int value){
   int level = vm.level, bucket = vm.bucket, index = vm.index;
   return levels[level][bucket].b[index].first;
 }
+
+// void multi_level_bucket_heap::debug(){
+//   int qt = levels[k+1][(bucket_top_active+1)%delta].size;
+//   int total = 0;
+//   for(int i=0;i<delta;i++) total+=levels[k+1][i].size;
+//   total-=qt;
+//   cout<<local_size<<"+"<<qt<<" = "<<mlb_size<<endl;
+//   if(mlb_size==local_size+qt) cout<<"DEU BOM"<<endl;
+//   else{
+//     cout<<"DEU RUIM"<<endl;
+//   }
+//   cout<<"--------<<-----"<<endl;
+// }
