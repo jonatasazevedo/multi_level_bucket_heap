@@ -92,7 +92,9 @@ void multi_level_bucket_heap::insertLocal(int key,int value){
 void multi_level_bucket_heap::insert(int key,int value){ 
   mlb_size++;
   int bucket_top_level = findBucketTopLevel(key);
-  if(bucket_top_level==bucket_top_active) insertLocal(key%top_level_range,value);
+  if(bucket_top_level==bucket_top_active){
+    insertLocal(key%top_level_range,value);
+  }
   else{
     levels[k+1][bucket_top_level].insert(key,value);
     valueMaps[value] = ValueMap(k+1,bucket_top_level,levels[k+1][bucket_top_level].size-1);
@@ -150,7 +152,6 @@ void multi_level_bucket_heap::decrease_key(int newKey, int value){
   
   ValueMap vm = valueMaps[value];
   int level = vm.level, bucket = vm.bucket, index = vm.index;
-  int elAntigo = levels[level][bucket].b[index].first;
   if(level==levelActive && bucket==bucketActive){
     newKey%=top_level_range;
     sheap.decrease_key(newKey,value);
@@ -158,7 +159,13 @@ void multi_level_bucket_heap::decrease_key(int newKey, int value){
   }
   else{
     deleteAt(level,bucket,index);
-    insert(newKey,value);
+    if(level==k+1) {
+      insert(newKey,value);
+    }
+    else {
+      mlb_size++;  
+      insertLocal(newKey%top_level_range,value);
+    }
   }
 }
 
