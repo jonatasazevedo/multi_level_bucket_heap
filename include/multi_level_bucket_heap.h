@@ -60,5 +60,4 @@ class multi_level_bucket_heap{
     void insert(int key,int value);
     int extract_min();
     void decrease_key(int newKey, int value);
-    int keyValue(int value);
 };

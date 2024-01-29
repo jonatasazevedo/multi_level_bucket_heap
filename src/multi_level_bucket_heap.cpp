@@ -53,7 +53,7 @@ void multi_level_bucket_heap::deleteAt(int level, int bucket, int index){
   levels[level][bucket].b.pop_back();
   levels[level][bucket].size--;
   level_size[level]--;
-  if(level<=k && level>=0) local_size--;
+  if(level<=k && level>0) local_size--;
   mlb_size--;
 }
 
@@ -113,32 +113,35 @@ void multi_level_bucket_heap::expand(int level, int bucket){
 }
 
 int multi_level_bucket_heap::extract_min(){
-  if(mlb_size<=0) return -1; //empty multi-level-bucket
+  if(mlb_size<=0) return -1;
   if(local_size==0) fill_structure_local();
 
-  if(!sheap.empty()){ // sheap is not empty
-    pii minPair = sheap.extract_min(); //delete and extract in sheap
+  if(!sheap.empty()){ // there is bucket active
+    pii minPair = sheap.extract_min();
     ValueMap vm = valueMaps[minPair.second];
     int level = vm.level, bucket = vm.bucket, index = vm.index;
     deleteAt(level,bucket,index); //delete in bucket structure
     if(sheap.empty()) deactive_bucket(level,bucket);
     return minPair.second;
   }
-  int minLevel = 1, bucketIndex=0;
-  while(level_size[minLevel]==0 && minLevel<k) minLevel++;
 
+  int minLevel = 1, bucketIndex=0;
+  while(level_size[minLevel]==0) minLevel++;
   while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
   pii minPair = levels[minLevel][bucketIndex].getMin();
   last_temp = minPair.first;
   int index = valueMaps[minPair.second].index;
   deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
 
-  if(levels[minLevel][bucketIndex].size<=t && levels[minLevel][bucketIndex].size>0)
-    activate_bucket(minLevel,bucketIndex);
-  else{
-    last = last_temp;
-    expand(minLevel,bucketIndex);
+  if(minLevel!=1){
+    if(levels[minLevel][bucketIndex].size<=t && levels[minLevel][bucketIndex].size>0)
+      activate_bucket(minLevel,bucketIndex);
+    else{
+      last = last_temp;
+      expand(minLevel,bucketIndex);
+    }
   }
+  else last = last_temp;
 
   return minPair.second;
 }
@@ -199,22 +202,3 @@ int multi_level_bucket_heap::size(){
 bool multi_level_bucket_heap::empty(){
   return mlb_size==0;
 }
-
-int multi_level_bucket_heap::keyValue(int value){
-  ValueMap vm = valueMaps[value];
-  int level = vm.level, bucket = vm.bucket, index = vm.index;
-  return levels[level][bucket].b[index].first;
-}
-
-// void multi_level_bucket_heap::debug(){
-//   int qt = levels[k+1][(bucket_top_active+1)%delta].size;
-//   int total = 0;
-//   for(int i=0;i<delta;i++) total+=levels[k+1][i].size;
-//   total-=qt;
-//   cout<<local_size<<"+"<<qt<<" = "<<mlb_size<<endl;
-//   if(mlb_size==local_size+qt) cout<<"DEU BOM"<<endl;
-//   else{
-//     cout<<"DEU RUIM"<<endl;
-//   }
-//   cout<<"--------<<-----"<<endl;
-// }
