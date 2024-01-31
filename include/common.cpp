@@ -119,9 +119,9 @@ struct timer {
     void restart() {
         begin = chrono::high_resolution_clock::now();
     }
-    int elapsed() {
+    double elapsed() {
         auto end = chrono::high_resolution_clock::now();
-        return chrono::duration_cast<chrono::milliseconds>(end - begin).count();
+        return (chrono::duration_cast<chrono::microseconds>(end - begin).count())/1000.0;
     }
 };
 
@@ -134,6 +134,7 @@ int check_sum(auto &v) {
 }
 
 void print_output(string type, auto &d, auto &p, auto &otimer) {
+    cout<<fixed<<setprecision(2);
     if(type.find("main_time") != string::npos) {
         cout << otimer.elapsed() << endl;
     }
