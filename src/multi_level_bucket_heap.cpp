@@ -43,10 +43,11 @@ int multi_level_bucket_heap::msb(int x){
   return (x==0)? 0:__builtin_clz(1) - __builtin_clz(x);
 }
 
-void multi_level_bucket_heap::deleteAt(int level, int bucket, int index){
-  if(index >= levels[level][bucket].size) return;
+void multi_level_bucket_heap::deleteElement(int value){
+  ValueMap vm = valueMaps[value];
+  int level = vm.level, bucket = vm.bucket, index = vm.index;
+  pii lastPair = levels[level][bucket].b.back();
   if(index  < levels[level][bucket].size-1){
-    pii lastPair = levels[level][bucket].b.back();
     levels[level][bucket].b[index] = lastPair;
     valueMaps[lastPair.second].index = index;
   }
@@ -55,6 +56,7 @@ void multi_level_bucket_heap::deleteAt(int level, int bucket, int index){
   level_size[level]--;
   if(level<=k && level>0) local_size--;
   mlb_size--;
+  // cout<<lastPair.second<<" deletado de ("<<level<<", "<<bucket<<", "<<index<<")"<<endl;
 }
 
 int multi_level_bucket_heap::calc_level(int key){
@@ -79,6 +81,9 @@ void multi_level_bucket_heap::insertLocal(int key,int value){
   levels[level][bucket].insert(key,value);
   level_size[level]++;
   local_size++;
+  // if(level==valueMaps[value].level && bucket==valueMaps[value].bucket){
+  //   cout<<"caiu no mesmo level e bucket"<<endl;
+  // }
   valueMaps[value] = ValueMap(level,bucket,levels[level][bucket].size-1);
   //verify if there is an active bucket, and whether it will be inserted into this bucket
   if(level==levelActive && bucket==bucketActive){
@@ -99,6 +104,7 @@ void multi_level_bucket_heap::insert(int key,int value){
     levels[k+1][bucket_top_level].insert(key,value);
     valueMaps[value] = ValueMap(k+1,bucket_top_level,levels[k+1][bucket_top_level].size-1);
   }
+  // cout<<value<<" inserido no ("<<valueMaps[value].level<<", "<<valueMaps[value].bucket<<", "<<valueMaps[value].index<<")"<<endl;
 }
 
 void multi_level_bucket_heap::expand(int level, int bucket){
@@ -120,10 +126,8 @@ int multi_level_bucket_heap::extract_min(){
 
   if(!sheap.empty()){ // there is bucket active
     pii minPair = sheap.extract_min();
-    ValueMap vm = valueMaps[minPair.second];
-    int level = vm.level, bucket = vm.bucket, index = vm.index;
-    deleteAt(level,bucket,index); //delete in bucket structure
-    if(sheap.empty()) deactive_bucket(level,bucket);
+    deleteElement(minPair.second);
+    if(sheap.empty()) deactive_bucket(levelActive,bucketActive);
     return minPair.second;
   }
 
@@ -132,8 +136,7 @@ int multi_level_bucket_heap::extract_min(){
   while(levels[minLevel][bucketIndex].size==0) bucketIndex++;
   pii minPair = levels[minLevel][bucketIndex].getMin();
   last_temp = minPair.first;
-  int index = valueMaps[minPair.second].index;
-  deleteAt(minLevel,bucketIndex,index); //delete in bucket structure
+  deleteElement(minPair.second); //delete in bucket structure
 
   if(minLevel!=1){
     if(levels[minLevel][bucketIndex].size<=t && levels[minLevel][bucketIndex].size>0)
@@ -158,7 +161,7 @@ void multi_level_bucket_heap::decrease_key(int newKey, int value){
     levels[level][bucket].b[index]={newKey,value};
   }
   else{
-    deleteAt(level,bucket,index);
+    deleteElement(value);
     if(level==k+1) {
       insert(newKey,value);
     }
@@ -189,6 +192,7 @@ void multi_level_bucket_heap::deactive_bucket(int level,int bucket){
 
 void multi_level_bucket_heap::fill_structure_local(){
   if(mlb_size!=0){
+    // cout<<"resetou estrutura local"<<endl;
     bucket_top_active++;
     if(bucket_top_active==delta) bucket_top_active=0;
     levelActive=bucketActive=-1;

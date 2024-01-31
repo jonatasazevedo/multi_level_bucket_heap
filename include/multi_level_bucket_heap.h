@@ -43,7 +43,7 @@ class multi_level_bucket_heap{
     int calc_level(int key);
     int calc_bucket(int key,int level);
     int msb(int x);
-    void deleteAt(int level, int bucket, int index);
+    void deleteElement(int value);
     void expand(int level,int bucket);
     void activate_bucket(int level,int bucket);
     void deactive_bucket(int level,int bucket);
