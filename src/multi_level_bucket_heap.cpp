@@ -56,7 +56,8 @@ void multi_level_bucket_heap::deleteElement(int value){
   level_size[level]--;
   if(level<=k && level>0) local_size--;
   mlb_size--;
-  // cout<<lastPair.second<<" deletado de ("<<level<<", "<<bucket<<", "<<index<<")"<<endl;
+  // cout<<value<<" deletado de ("<<level<<", "<<bucket<<", "<<index<<")"<<endl;
+  valueMaps[value] = {-1,-1,-1};
 }
 
 int multi_level_bucket_heap::calc_level(int key){
@@ -81,9 +82,6 @@ void multi_level_bucket_heap::insertLocal(int key,int value){
   levels[level][bucket].insert(key,value);
   level_size[level]++;
   local_size++;
-  // if(level==valueMaps[value].level && bucket==valueMaps[value].bucket){
-  //   cout<<"caiu no mesmo level e bucket"<<endl;
-  // }
   valueMaps[value] = ValueMap(level,bucket,levels[level][bucket].size-1);
   //verify if there is an active bucket, and whether it will be inserted into this bucket
   if(level==levelActive && bucket==bucketActive){
@@ -108,12 +106,10 @@ void multi_level_bucket_heap::insert(int key,int value){
 }
 
 void multi_level_bucket_heap::expand(int level, int bucket){
-  std::vector<pii> bucket_vector = levels[level][bucket].b;
-  levels[level][bucket].b.clear();
-  levels[level][bucket].size=0;
-
-  for(size_t i=0;i<bucket_vector.size();i++){
-    pii elemento = bucket_vector[i];
+  while(levels[level][bucket].size>0){
+    pii elemento = levels[level][bucket].b.back();
+    levels[level][bucket].b.pop_back();
+    levels[level][bucket].size--;
     level_size[level]--;
     local_size--;
     insertLocal(elemento.first,elemento.second);
