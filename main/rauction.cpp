@@ -128,6 +128,7 @@ signed main() {
 
     auto in = ifstream(query_path);
     int t; in >> t;
+    cout<<"rauction"<<endl;
     while(t--) {
         int r, s; in >> r >> s;
 

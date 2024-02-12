@@ -18,6 +18,7 @@ signed main() {
     vector<int> d, p;
     auto in = ifstream(query_path);
     int t; in >> t;
+    cout<<"dijkstra"<<endl;
     while(t--) {
         int r, s; in >> r >> s;
         pq_t q(c,n);
