@@ -1,14 +1,16 @@
 #include <bits/stdc++.h>
 #include "common.cpp"
 #define all(x) x.begin(), x.end()
-#define int long long
 using namespace std;
 
-signed main() {
-    //ios::sync_with_stdio(false);
-    //cin.tie(0);
+signed main(int argc,char *argv[]) {
+    int qtLevels = atoi(argv[1]);
+    int tamSheap = atoi(argv[2]);
+    int dSheap = 3;
+
+    ios::sync_with_stdio(false);
+    cin.tie(0);
     #define endl '\n'
-    
 
     cfg_reader reader;
     string dataset_path = reader.get("dataset");
@@ -21,10 +23,10 @@ signed main() {
     cout<<"dijkstra"<<endl;
     while(t--) {
         int r, s; in >> r >> s;
-        pq_t q(c,n);
+        pq_t q(qtLevels,c,n,tamSheap,dSheap);
         init_dijkstra(d, p, q, n, r);
         dijkstra(adj, d, p, q);
-        pq_t q2(c,n);
+        pq_t q2(qtLevels,c,n,tamSheap,dSheap);
         timer otimer;
         init_dijkstra(d, p, q2, n, s);
         dijkstra(adj, d, p, q2);

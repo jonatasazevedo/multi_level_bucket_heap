@@ -2,17 +2,18 @@
 
 using namespace std;
 
-set<string> algs = {"dijkstra","rdijkstra","rdijkstra-v2","rauction","rauction-v2"};
-int main(){
+set<string> algs = {};
+int main(int argc,char *argv[]){
+    cout<<"k: "<<argv[1]<<", t: "<<argv[2]<<endl;
     cout<<fixed<<setprecision(2);
     string s;
     string name_alg = "empty",name_dataset = "empty";
     double soma=0;
     int qt=0;
-    cout<<"instâncias,dijkstra,rdijkstra,rdijkstra-v2,rauction,rauction-v2";
+    cout<<"instâncias,dijkstra";
     while(getline(cin,s)){
         if(s.front()!='/'){
-            if(algs.find(s)!=algs.end()){
+            if(s=="dijkstra"){
                 if(s!=name_alg && name_alg!="empty"){
                     cout<<(soma/qt)<<",";
                     name_alg=s;
@@ -37,4 +38,5 @@ int main(){
             }
         }
     }
+    if(name_alg!="empty") cout<<(soma/qt);
 }
