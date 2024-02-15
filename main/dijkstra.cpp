@@ -20,17 +20,21 @@ signed main(int argc,char *argv[]) {
     vector<int> d, p;
     auto in = ifstream(query_path);
     int t; in >> t;
-    cout<<"dijkstra"<<endl;
+    
     while(t--) {
         int r, s; in >> r >> s;
-        pq_t q(qtLevels,c,n,tamSheap,dSheap);
-        init_dijkstra(d, p, q, n, r);
-        dijkstra(adj, d, p, q);
-        pq_t q2(qtLevels,c,n,tamSheap,dSheap);
-        timer otimer;
-        init_dijkstra(d, p, q2, n, s);
-        dijkstra(adj, d, p, q2);
-        print_output(reader.get("type"), d, p, otimer);
+        for(int i=0;i<10;i++){
+            cout<<"dijkstra"<<endl;
+            pq_t q(qtLevels,c,n,tamSheap,dSheap);
+            init_dijkstra(d, p, q, n, r);
+            dijkstra(adj, d, p, q);
+            pq_t q2(qtLevels,c,n,tamSheap,dSheap);
+            timer otimer;
+            init_dijkstra(d, p, q2, n, s);
+            dijkstra(adj, d, p, q2);
+            print_output(reader.get("type"), d, p, otimer);
+        }
     }
+    
     return 0;
 }
