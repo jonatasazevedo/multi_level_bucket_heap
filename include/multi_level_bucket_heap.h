@@ -1,7 +1,6 @@
 #pragma once
 #include <bits/stdc++.h>
 #include "bucket.h"
-#include "dheap.h"
 typedef std::pair<int,int> pii;
 
 struct ValueMap{
@@ -14,8 +13,7 @@ struct ValueMap{
 
 class multi_level_bucket_heap{
   private:
-    int k, max_key, max_value, delta, lgdelta,top_level_range,bucket_top_active,last, mlb_size, local_size, t,
-    levelActive,bucketActive,last_temp,d;
+    int k, max_key, max_value, delta, lgdelta,top_level_range,bucket_top_active,last, mlb_size, local_size;
     //k -> number of levels
     //max_key -> maximum key that can be inserted
     //max_value -> maximum value that can be inserted
@@ -32,7 +30,6 @@ class multi_level_bucket_heap{
     //last_temp -> temporary last
     //d -> type of d-heap
     std::vector<int> level_size;
-    dheap sheap;
     //level_size -> number of elements in level (all buckets)
     //levels -> levels[i] -> vector of buckets in level i
     //s-heap, size-sensitive heap
@@ -55,8 +52,7 @@ class multi_level_bucket_heap{
     std::vector<std::vector<bucket>> levels;
     int size();
     bool empty();
-    multi_level_bucket_heap(int k,int max_key, int max_value,int t,int d);
-    multi_level_bucket_heap(int max_key,int max_value);
+    multi_level_bucket_heap(int k,int max_key, int max_value);
     void insert(int key,int value);
     int extract_min();
     void decrease_key(int newKey, int value);

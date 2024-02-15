@@ -5,8 +5,6 @@ using namespace std;
 
 signed main(int argc,char *argv[]) {
     int qtLevels = atoi(argv[1]);
-    int tamSheap = atoi(argv[2]);
-    int dSheap = 3;
 
     ios::sync_with_stdio(false);
     cin.tie(0);
@@ -25,10 +23,10 @@ signed main(int argc,char *argv[]) {
         int r, s; in >> r >> s;
         for(int i=0;i<10;i++){
             cout<<"dijkstra"<<endl;
-            pq_t q(qtLevels,c,n,tamSheap,dSheap);
+            pq_t q(qtLevels,c,n);
             init_dijkstra(d, p, q, n, r);
             dijkstra(adj, d, p, q);
-            pq_t q2(qtLevels,c,n,tamSheap,dSheap);
+            pq_t q2(qtLevels,c,n);
             timer otimer;
             init_dijkstra(d, p, q2, n, s);
             dijkstra(adj, d, p, q2);

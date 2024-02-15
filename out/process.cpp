@@ -4,7 +4,7 @@ using namespace std;
 
 set<string> algs = {};
 int main(int argc,char *argv[]){
-    cout<<"k: "<<argv[1]<<", t: "<<argv[2]<<endl;
+    cout<<"k: "<<argv[1]<<endl;
     cout<<fixed<<setprecision(2);
     string s;
     string name_alg = "empty",name_dataset = "empty";

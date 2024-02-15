@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+make
+. set_enviroment.bash
+./build/bin/dijkstra 5 5

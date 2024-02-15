@@ -13,6 +13,7 @@ using graph_t = vector<list<pair<int, int>>>;
 const int oo = 1e18;
 
 void init_dijkstra(auto &d, auto &p, pq_t &q, const int n, const int s) {
+    
     d = vector<int>(n, oo);
     p = vector<int>(n, -1);
     d[s] = 0;
